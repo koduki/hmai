@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/food_item.dart';
+import '../models/meal_entry.dart';
+import 'package:provider/provider.dart';
 
 class EditMealPage extends StatelessWidget {
   final String mealType;
 
-  EditMealPage({required this.mealType});
+  EditMealPage({super.key, required this.mealType});
 
   final List<FoodItem> foodItems = [
     FoodItem(name: "アスパラガス(100g)", calories: 21),
@@ -19,6 +21,7 @@ class EditMealPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mealEntry = Provider.of<MealEntry>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -29,7 +32,7 @@ class EditMealPage extends StatelessWidget {
         itemBuilder: (context, index) {
           return ListTile(
             leading: IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () {
                 // Handle deletion of the food item (for now, just print)
                 print('Deleted ${foodItems[index].name}');
@@ -40,12 +43,13 @@ class EditMealPage extends StatelessWidget {
             trailing: ElevatedButton(
               onPressed: () {
                 // Handle food item registration
-                print('Registered ${foodItems[index].name}');
+                mealEntry.add(foodItems[index]);
+                print('Registered3 ${foodItems[index].name}');
               },
-              child: Text('登録'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
               ),
+              child: Text('登録'),
             ),
           );
         },
