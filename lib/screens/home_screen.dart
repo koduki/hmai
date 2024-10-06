@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/meal_entry.dart';
 import '../widgets/meal_card.dart';
-import '../providers/meal_entry_provider.dart';
+import '../providers/meal_entry_list_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
