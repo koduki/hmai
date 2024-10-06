@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/food_item.dart';
-import '../models/meal_entry.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/meal_entry_provider.dart'; // 正しいパスに変更
 
-class EditMealPage extends StatelessWidget {
+class EditMealPage extends ConsumerWidget {
   final String mealType;
 
   EditMealPage({super.key, required this.mealType});
@@ -20,8 +20,8 @@ class EditMealPage extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    final mealEntry = Provider.of<MealEntry>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mealEntry = ref.watch(mealEntryProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -43,13 +43,13 @@ class EditMealPage extends StatelessWidget {
             trailing: ElevatedButton(
               onPressed: () {
                 // Handle food item registration
-                mealEntry.add(foodItems[index]);
+                mealEntry.addFoodItem(foodItems[index]);
                 print('Registered3 ${foodItems[index].name}');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
               ),
-              child: Text('登録'),
+              child: const Text('登録'),
             ),
           );
         },

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/meal_entry.dart';
-import '../screens/edit_meal_page.dart';
-import 'package:provider/provider.dart'; // 追加
+import '../providers/meal_entry_provider.dart';
 
-class MealCard extends StatelessWidget {
-  final MealEntry mealEntry;
+class MealCard extends ConsumerWidget {
+  final int index;
 
-  const MealCard({super.key, required this.mealEntry});
+  const MealCard({super.key, required this.index});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mealEntry = ref.watch(mealEntryListProvider)[index];
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       child: Padding(
@@ -20,9 +22,7 @@ class MealCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  mealEntry.mealType == "朝食"
-                      ? Icons.wb_sunny
-                      : Icons.wb_cloudy, // Different icons for breakfast/lunch
+                  mealEntry.mealType == "朝食" ? Icons.wb_sunny : Icons.wb_cloudy,
                   color: Colors.green,
                 ),
                 const SizedBox(width: 8),
@@ -40,12 +40,10 @@ class MealCard extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.edit, color: Colors.green),
                   onPressed: () {
-                    // Navigate to EditMealPage when pencil is clicked
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ChangeNotifierProvider(
-                              create: (context) => mealEntry,
+                          builder: (context) => ProviderScope(
                               child:
                                   EditMealPage(mealType: mealEntry.mealType))),
                     );
@@ -56,7 +54,7 @@ class MealCard extends StatelessWidget {
             const SizedBox(height: 8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: mealEntry.menuItems.map((item) {
+              children: mealEntry.foodItems.map((item) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Row(

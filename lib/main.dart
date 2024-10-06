@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // 追加
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpodをインポート
 
 import 'models/meal_entry.dart';
 import 'screens/home_screen.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => MealEntryList()
-        ..add(MealEntry(mealType: "朝食"))
-        ..add(MealEntry(mealType: "昼食")),
-      child: MyApp(),
+    ProviderScope(
+      // ProviderScopeでラップ
+      child: const MyApp(),
     ),
   );
 }
@@ -20,7 +18,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Health Management AI',
       home: HomeScreen(),
     );
