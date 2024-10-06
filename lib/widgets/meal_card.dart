@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/meal_entry.dart';
 import '../providers/meal_entry_provider.dart';
+import '../screens/edit_meal_page.dart';
 
 class MealCard extends ConsumerWidget {
   final int index;
@@ -43,9 +44,10 @@ class MealCard extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProviderScope(
-                              child:
-                                  EditMealPage(mealType: mealEntry.mealType))),
+                        builder: (context) => ProviderScope(
+                          child: EditMealPage(mealEntryIndex: index),
+                        ),
+                      ),
                     );
                   },
                 ),

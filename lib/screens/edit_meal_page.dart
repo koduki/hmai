@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/food_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/meal_entry_provider.dart'; // 正しいパスに変更
+import '../providers/meal_entry_provider.dart';
 
 class EditMealPage extends ConsumerWidget {
-  final String mealType;
+  final int mealEntryIndex;
 
-  EditMealPage({super.key, required this.mealType});
+  EditMealPage({super.key, required this.mealEntryIndex});
 
   final List<FoodItem> foodItems = [
     FoodItem(name: "アスパラガス(100g)", calories: 21),
@@ -21,11 +21,13 @@ class EditMealPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mealEntry = ref.watch(mealEntryProvider);
+    final mealEntryList = ref.watch(mealEntryListProvider);
+    final mealEntry = mealEntryList[mealEntryIndex];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: Text('$mealTypeの履歴'),
+        title: Text('${mealEntry.mealType}の履歴'),
       ),
       body: ListView.builder(
         itemCount: foodItems.length,
@@ -43,8 +45,11 @@ class EditMealPage extends ConsumerWidget {
             trailing: ElevatedButton(
               onPressed: () {
                 // Handle food item registration
-                mealEntry.addFoodItem(foodItems[index]);
-                print('Registered3 ${foodItems[index].name}');
+                ref.read(mealEntryListProvider.notifier).updateMealEntry(
+                      mealEntryIndex,
+                      mealEntry..add(foodItems[index]),
+                    );
+                print('Registered ${foodItems[index].name}');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
