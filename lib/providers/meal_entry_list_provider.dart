@@ -19,12 +19,7 @@ class MealEntryList extends StateNotifier<List<MealEntry>> {
   void addFood(int index, FoodItem food) {
     state = [
       for (int i = 0; i < state.length; i++)
-        if (i == index)
-          state[i]
-            ..foodItems
-            ..add(food)
-        else
-          state[i]
+        if (i == index) state[i]..foodItems.add(food) else state[i]
     ];
   }
 }
