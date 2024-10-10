@@ -6,7 +6,9 @@ import '../widgets/calorie_progress.dart';
 import '../providers/meal_entry_list_provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+  final ValueNotifier<DateTime> targetDateNotifier =
+      ValueNotifier(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -17,31 +19,52 @@ class HomeScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.green,
-            title:
-                const Text('2024年10月', style: TextStyle(color: Colors.white)),
+            title: ValueListenableBuilder<DateTime>(
+              valueListenable: targetDateNotifier,
+              builder: (context, targetDate, child) {
+                return Text(
+                  '${targetDate.year}年${targetDate.month}月',
+                  style: TextStyle(color: Colors.white),
+                );
+              },
+            ),
             centerTitle: true,
           ),
           body: Column(
             children: [
               // Date Selector
-              Container(
-                padding: EdgeInsets.all(8),
-                color: Colors.green.shade200,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(7, (index) {
-                    return CircleAvatar(
-                      backgroundColor:
-                          index == 3 ? Colors.orange : Colors.white,
-                      child: Text(
-                        '${7 + index}',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    );
-                  }),
-                ),
+              ValueListenableBuilder<DateTime>(
+                valueListenable: targetDateNotifier,
+                builder: (context, targetDate, child) {
+                  return Container(
+                    padding: EdgeInsets.all(8),
+                    color: Colors.green.shade200,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(7, (index) {
+                        final displayedDate = targetDate.day - 3 + index;
+                        return GestureDetector(
+                            onTap: () {
+                              targetDateNotifier.value = DateTime(
+                                  targetDate.year,
+                                  targetDate.month,
+                                  displayedDate);
+                              print(targetDateNotifier.value);
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: displayedDate == targetDate.day
+                                  ? Colors.orange
+                                  : Colors.white,
+                              child: Text(
+                                '$displayedDate',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ));
+                      }),
+                    ),
+                  );
+                },
               ),
-
               // Calorie Intake Section
               Padding(
                 padding: const EdgeInsets.all(8.0),
