@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Health Management AI',
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }

@@ -5,65 +5,67 @@ import '../widgets/meal_card.dart';
 import '../widgets/calorie_progress.dart';
 import '../providers/meal_entry_list_provider.dart';
 
+final targetDateProvider = StateNotifierProvider<TargetDateNotifier, DateTime>(
+  (ref) => TargetDateNotifier(),
+);
+
+class TargetDateNotifier extends StateNotifier<DateTime> {
+  TargetDateNotifier() : super(DateTime.now());
+
+  void update(DateTime newDate) {
+    state = newDate;
+  }
+}
+
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
-  final ValueNotifier<DateTime> targetDateNotifier =
-      ValueNotifier(DateTime.now());
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
         final mealEntries = ref.watch(mealEntryListProvider);
+        final targetDate = ref.watch(targetDateProvider);
 
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.green,
-            title: ValueListenableBuilder<DateTime>(
-              valueListenable: targetDateNotifier,
-              builder: (context, targetDate, child) {
-                return Text(
-                  '${targetDate.year}年${targetDate.month}月',
-                  style: TextStyle(color: Colors.white),
-                );
-              },
+            title: Text(
+              '${targetDate.year}年${targetDate.month}月',
+              style: const TextStyle(color: Colors.white),
             ),
             centerTitle: true,
           ),
           body: Column(
             children: [
               // Date Selector
-              ValueListenableBuilder<DateTime>(
-                valueListenable: targetDateNotifier,
-                builder: (context, targetDate, child) {
-                  return Container(
-                    padding: EdgeInsets.all(8),
-                    color: Colors.green.shade200,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(7, (index) {
-                        final displayedDate = targetDate.day - 3 + index;
-                        return GestureDetector(
-                            onTap: () {
-                              targetDateNotifier.value = DateTime(
-                                  targetDate.year,
-                                  targetDate.month,
-                                  displayedDate);
-                              print(targetDateNotifier.value);
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: displayedDate == targetDate.day
-                                  ? Colors.orange
-                                  : Colors.white,
-                              child: Text(
-                                '$displayedDate',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ));
-                      }),
-                    ),
-                  );
-                },
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: Colors.green.shade200,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(7, (index) {
+                    final displayedDate = targetDate.day - 3 + index;
+                    return InkWell(
+                      onTap: () {
+                        ref.read(targetDateProvider.notifier).update(
+                              DateTime(targetDate.year, targetDate.month,
+                                  displayedDate),
+                            );
+                        print(ref.read(targetDateProvider));
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: displayedDate == targetDate.day
+                            ? Colors.orange
+                            : Colors.white,
+                        child: Text(
+                          '$displayedDate',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
               ),
               // Calorie Intake Section
               Padding(
@@ -71,8 +73,8 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("摂取カロリー"),
-                    SizedBox(height: 8),
+                    const Text("摂取カロリー"),
+                    const SizedBox(height: 8),
                     Consumer(
                       builder: (context, ref, child) {
                         final intake = mealEntries.fold<int>(
