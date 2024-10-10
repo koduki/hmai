@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/meal_entry_list_provider.dart';
-import '../screens/edit_meal_page.dart';
+import '../screens/edit_meal_screen.dart';
 
 class MealCard extends StatelessWidget {
   final int index;
@@ -48,7 +48,7 @@ class MealCard extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                EditMealPage(mealEntryIndex: index),
+                                EditMealScreen(mealEntryIndex: index),
                           ),
                         );
                       },
@@ -63,6 +63,15 @@ class MealCard extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: Row(
                         children: [
+                          IconButton(
+                            onPressed: () {
+                              // 削除処理
+                              var mealList =
+                                  ref.read(mealEntryListProvider.notifier);
+                              mealList.removeFood(index, item);
+                            },
+                            icon: const Icon(Icons.close),
+                          ),
                           Image.network(
                             item.imageUrl ??
                                 'https://www.namepuri.com/img/topics_img.jpg',

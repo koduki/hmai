@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/food_item.dart';
 import '../providers/meal_entry_list_provider.dart';
 
-class EditMealPage extends StatelessWidget {
+class EditMealScreen extends StatelessWidget {
   final int mealEntryIndex;
 
-  EditMealPage({super.key, required this.mealEntryIndex});
+  EditMealScreen({super.key, required this.mealEntryIndex});
 
   final List<FoodItem> foodItems = [
     FoodItem(name: "アスパラガス(100g)", calories: 21),

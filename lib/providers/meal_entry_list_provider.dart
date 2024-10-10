@@ -22,6 +22,16 @@ class MealEntryList extends StateNotifier<List<MealEntry>> {
         if (i == index) state[i]..foodItems.add(food) else state[i]
     ];
   }
+
+  void removeFood(int index, FoodItem food) {
+    state = [
+      for (int i = 0; i < state.length; i++)
+        if (i == index)
+          state[i]..foodItems.removeWhere((item) => item == food)
+        else
+          state[i]
+    ];
+  }
 }
 
 final mealEntryListProvider =
